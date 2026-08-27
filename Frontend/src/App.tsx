@@ -1,75 +1,71 @@
 import { useState } from "react";
-import Header from "@/components/Header";
-import Banner from "@/components/Banner";
-import ProductSection from "@/components/ProductSection";
-import CartDrawer from "@/components/CartDrawer";
-import { products, cartItems as initialCartItems } from "@/data/products";
-import type { CartItem, CustomerForm, Product, SearchTab } from "@/types";
+import HomeApresentacao from "@/pages/HomeApresentacao";
+import HomeCliente from "@/pages/HomeCliente";
+import Login from "@/pages/Login";
+import HomeProvedor from "@/pages/HomeProvedor";
+import HomeAdministrativo from "@/pages/HomeAdministrativo";
+import PerfilProvedor from "@/pages/PerfilProvedor";
+import ResultsProvedor from "@/pages/ResultsProvedor";
+import ResultsItens from "@/pages/ResultsItens";
 
 export default function App() {
-  const [searchFocused, setSearchFocused] = useState(false);
-  const [activeTab, setActiveTab] = useState<SearchTab>("Vendedores");
-  const [cartOpen, setCartOpen] = useState(false);
-  const [items, setItems] = useState<CartItem[]>(initialCartItems);
-  const [form, setForm] = useState<CustomerForm>({ name: "", address: "" });
+  const [currentPage, setCurrentPage] = useState<string>("inicial");
+  const [selectedProvedorId, setSelectedProvedorId] = useState<string | number | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const handleAddToCart = (product: Product) => {
-    const newItem: CartItem = {
-      id: `${product.id}-${Date.now()}`,
-      name: product.name,
-      price: product.retail.split(" - ")[0],
-      category: "Varejo",
-      image: product.image,
-    };
-    setItems((prev) => [...prev, newItem]);
-    setCartOpen(true);
-  };
-
-  const handleRemove = (id: CartItem["id"]) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const handleConfirm = () => {
-    alert(`Compra confirmada para ${form.name || "cliente"}!`);
-    setCartOpen(false);
+  const handleNavigate = (page: string, data?: any) => {
+    if (page === "profile_provedor" && data) {
+      setSelectedProvedorId(data);
+    }
+    if ((page === "results_provedor" || page === "results_itens") && typeof data === "string") {
+      setSearchQuery(data);
+    }
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div
-      className="min-h-screen bg-background"
-      onClick={() => searchFocused && setSearchFocused(false)}
-    >
-      <div onClick={(e) => e.stopPropagation()}>
-        <Header
-          searchFocused={searchFocused}
-          onFocusSearch={() => setSearchFocused(true)}
-          activeTab={activeTab}
-          onChangeTab={setActiveTab}
-          cartCount={items.length}
-          onToggleCart={() => setCartOpen((v) => !v)}
-        />
-      </div>
+    <div className="min-h-screen bg-background text-foreground">
+      {currentPage === "inicial" && (
+        <HomeApresentacao onNavigate={handleNavigate} />
+      )}
 
-      <main>
-        <Banner />
-        <ProductSection title="Destaques" items={products} onAdd={handleAddToCart} />
-        <ProductSection
-          title="Achadinhos do Centro Sul"
-          items={[...products, ...products]}
-          wrap
-          onAdd={handleAddToCart}
-        />
-      </main>
+      {currentPage === "home_cliente" && (
+        <HomeCliente onNavigate={handleNavigate} />
+      )}
 
-      <CartDrawer
-        open={cartOpen}
-        items={items}
-        onRemove={handleRemove}
-        onClose={() => setCartOpen(false)}
-        onConfirm={handleConfirm}
-        form={form}
-        setForm={setForm}
-      />
+      {currentPage === "results_provedor" && (
+        <ResultsProvedor
+          searchQuery={searchQuery}
+          onNavigate={handleNavigate}
+        />
+      )}
+
+      {currentPage === "results_itens" && (
+        <ResultsItens
+          searchQuery={searchQuery}
+          onNavigate={handleNavigate}
+        />
+      )}
+
+      {currentPage === "profile_provedor" && (
+        <PerfilProvedor
+          provedorId={selectedProvedorId}
+          onNavigate={handleNavigate}
+        />
+      )}
+
+      {currentPage === "login" && (
+        <Login onNavigate={handleNavigate} />
+      )}
+
+      {currentPage === "home_provedor" && (
+        <HomeProvedor onNavigate={handleNavigate} />
+      )}
+
+      {currentPage === "home_administrador" && (
+        <HomeAdministrativo onNavigate={handleNavigate} />
+      )}
     </div>
   );
 }

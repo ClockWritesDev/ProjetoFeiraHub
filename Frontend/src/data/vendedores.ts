@@ -1,0 +1,135 @@
+import type { BannerItem } from "@/types";
+
+export const vendedoresDestaque: BannerItem[] = [
+  {
+    id: "vendedor-1",
+    storeName: "Hortifruti da Terra",
+    category: "Alimentos Orgânicos & Feira",
+    city: "Iguatu - CE",
+    phone: "(88) 99765-4321",
+    description: "Frutas, verduras e hortaliças frescas colhidas no dia direto do produtor.",
+    longDescription:
+      "Há mais de 8 anos fornecendo alimentos 100% orgânicos e sem agrotóxicos para a região de Iguatu. Trabalhamos em parceria com agricultores familiares da região, garantindo frescor diário, respeito à terra e preço justo tanto para o consumidor final quanto para quem compra em grande volume no atacado.",
+    image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=900&auto=format&fit=crop&q=80",
+    items: [
+      {
+        id: "v1-p1",
+        name: "Cesta de Verduras Orgânicas (5kg)",
+        image: "https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=500&auto=format&fit=crop&q=80",
+        retail: "R$ 38,00",
+        wholesale: "R$ 28,00",
+        type: "produto",
+      },
+      {
+        id: "v1-p2",
+        name: "Mel Puro de Abelha Silvestre 500g",
+        image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500&auto=format&fit=crop&q=80",
+        retail: "R$ 25,00",
+        wholesale: "R$ 19,50",
+        type: "produto",
+      },
+      {
+        id: "v1-p3",
+        name: "Queijo Coalho Tradicional Peça 1kg",
+        image: "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=500&auto=format&fit=crop&q=80",
+        retail: "R$ 34,90",
+        wholesale: "R$ 29,00",
+        type: "produto",
+      },
+    ],
+  },
+  {
+    id: "vendedor-2",
+    storeName: "Ateliê & Fios do Sertão",
+    category: "Artesanato & Decoração",
+    city: "Iguatu - CE",
+    phone: "(88) 99811-2233",
+    description: "Peças artesanais exclusivas em crochê, cerâmica e decoração regional.",
+    longDescription:
+      "Valorizando as tradições manuais do interior do Ceará, o Ateliê & Fios transforma matérias-primas naturais em artigos de alta durabilidade e bom gosto. Produzimos bolsas, descansos de mesa, vasos modelados à mão e utilitários que conectam você à identidade do artesanato nordestino.",
+    image: "https://images.unsplash.com/photo-1556760544-74068565f05c?w=900&auto=format&fit=crop&q=80",
+    items: [
+      {
+        id: "v2-p1",
+        name: "Bolsa de Macramê Trançada à Mão",
+        image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500&auto=format&fit=crop&q=80",
+        retail: "R$ 65,00",
+        wholesale: "R$ 48,00",
+        type: "produto",
+      },
+      {
+        id: "v2-p2",
+        name: "Vaso de Cerâmica Artesanal em Argila",
+        image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=500&auto=format&fit=crop&q=80",
+        retail: "R$ 45,00",
+        wholesale: "R$ 32,00",
+        type: "produto",
+      },
+      {
+        id: "v2-p3",
+        name: "Kit Descanso de Copo em Madeira Entalhada",
+        image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500&auto=format&fit=crop&q=80",
+        retail: "R$ 35,00",
+        wholesale: "R$ 24,00",
+        type: "produto",
+      },
+    ],
+  },
+  {
+    id: "vendedor-3",
+    storeName: "Lava Jato & Estética Express",
+    category: "Serviços Automotivos",
+    city: "Iguatu - CE",
+    phone: "(88) 98844-5566",
+    description: "Polimento técnico, higienização interna e lavagem completa.",
+    longDescription:
+      "Oferecemos soluções completas em estética automotiva para carros e motos. Atendimento com hora marcada ou ordem de chegada, utilizando produtos biodegradáveis de alto rendimento que preservam a pintura e o acabamento do seu veículo.",
+    image: "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=900&auto=format&fit=crop&q=80",
+    items: [
+      {
+        id: "v3-s1",
+        name: "Lavagem Detalhada e Enceramento Automotivo",
+        image: "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=500&auto=format&fit=crop&q=80",
+        retail: "R$ 70,00",
+        wholesale: "R$ 60,00",
+        type: "servico",
+      },
+      {
+        id: "v3-s2",
+        name: "Higienização Interna e Oxi-Sanitização",
+        image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=500&auto=format&fit=crop&q=80",
+        retail: "R$ 130,00",
+        type: "servico",
+      },
+    ],
+  },
+  {
+    id: "vendedor-4",
+    storeName: "Doces Caseiros da Vovó",
+    category: "Doces & Confeitaria Tradicional",
+    city: "Iguatu - CE",
+    phone: "(88) 99633-8899",
+    description: "Compotas, queijos artesanais, bolos e doces típicos da nossa terra.",
+    longDescription:
+      "Doces preparados em tacho de cobre seguindo receitas passadas de geração em geração. Nossas compotas de frutas regionais, goiabadas e bolos caseiros trazem o verdadeiro sabor do interior para a sua mesa, sem conservantes químicos.",
+    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=900&auto=format&fit=crop&q=80",
+    items: [
+      {
+        id: "v4-p1",
+        name: "Goiabada Cascão Tradicional 500g",
+        image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&auto=format&fit=crop&q=80",
+        retail: "R$ 18,00",
+        wholesale: "R$ 13,50",
+        type: "produto",
+      },
+      {
+        id: "v4-p2",
+        name: "Doce de Leite Cremoso com Ameixa 400g",
+        image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500&auto=format&fit=crop&q=80",
+        retail: "R$ 16,00",
+        wholesale: "R$ 12,00",
+        type: "produto",
+      },
+    ],
+  },
+];

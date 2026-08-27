@@ -1,11 +1,38 @@
 export interface Product {
-  id: number;
+  id: number | string;
   name: string;
   image: string | null;
   badge?: string;
   retail: string;
-  wholesale: string;
+  wholesale?: string;
+  type?: "produto" | "servico";
   hot?: boolean;
+  description?: string;
+  sellerName?: string;
+}
+
+export interface BannerItem {
+  id: string | number;
+  storeName: string;
+  description: string;
+  longDescription?: string;
+  image: string;
+  phone?: string;
+  city?: string;
+  category?: string;
+  items?: Product[];
+  linkUrl?: string;
+}
+
+export interface ItemProvedor {
+  id: string | number;
+  name: string;
+  image: string;
+  retail: string;
+  wholesale?: string;
+  stock: string;
+  salesCount: number;
+  isService: boolean;
 }
 
 export interface CartItem {
@@ -15,6 +42,7 @@ export interface CartItem {
   category: string;
   image: string | null;
   accent?: boolean;
+  quantity?: number;
 }
 
 export interface CustomerForm {
