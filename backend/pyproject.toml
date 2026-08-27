@@ -1,0 +1,49 @@
+[project]
+name = "musicsorter"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "jcesarap",email = "jcesarap@protonmail.com"}
+]
+requires-python = ">=3.12"
+dependencies = [
+	"fastapi",
+	"uvicorn[standard]",
+	"pydantic",
+]
+
+[tool.poetry] # To only use it as a package manager
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+# --- Add your Pylint configuration below ---
+
+# poetry install --all-groups
+[project.optional-dependencies]
+dev = [
+    "pylint>=3.0.0"
+]
+
+[tool.pylint.main]
+# Analyse section by section, or use full ignore lists
+ignore = ["CVS"]
+
+[tool.pylint.format]
+# Maximum number of characters on a single line.
+max-line-length = 88 # Matches Black formatter default
+
+[tool.pylint."messages control"]
+# Disable specific warnings that might be too noisy.
+# C0111: Missing docstring
+# R0903: Too few public methods
+disable = [
+    "C0111",
+    "R0903",
+]
+
+[tool.pylint.reports]
+# Activate the evaluation score report
+reports = "yes"

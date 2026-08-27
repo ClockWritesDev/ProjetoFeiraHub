@@ -1,0 +1,688 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Scratch Pad
+meta:
+  id: wrk_scratchpad
+  created: 1787805459234
+  modified: 1787805459234
+  description: ""
+collection:
+  - url: "{{ _.base_url }}/feed/provedores"
+    name: Listar Todos Provedores
+    meta:
+      id: req_4ad6b53e430a44d19a74104f395784b5
+      created: 1787805837599
+      modified: 1787806814448
+      isPrivate: false
+      description: READ - Todos os provedores cadastrados.
+      sortKey: -1787805837599
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/feed/carrossel"
+    name: Listar Provedores Carrossel
+    meta:
+      id: req_575d1d6aca344ce78e1ef3e82de64b32
+      created: 1787805837600
+      modified: 1787806820329
+      isPrivate: false
+      description: READ - Provedores que possuem foto_banner preenchida para o carrossel.
+      sortKey: -1787805837600
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/feed/itens/mais-vendidos"
+    name: Listar Itens Mais Vendidos
+    meta:
+      id: req_fa63268f5b3a44a297c4f9d7015edb3d
+      created: 1787805837602
+      modified: 1787806826651
+      isPrivate: false
+      description: READ - Todos os itens ordenados pelos mais vendidos (ORDER BY
+        vendidos DESC).
+      sortKey: -1787805837602
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/feed/vendedor/{{ _.nome_provedor }}/itens"
+    name: Listar Itens Por Vendedor
+    meta:
+      id: req_9e219d7cdb80478fbfd398a8f47c2c38
+      created: 1787805837603
+      modified: 1787806832382
+      isPrivate: false
+      description: READ - Todos os itens pertencentes a um provedor/vendedor específico.
+      sortKey: -1787805837603
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/feed/cidade/{{ _.nome_cidade }}/itens"
+    name: Listar Itens Por Cidade
+    meta:
+      id: req_035ec418d00a4bc0ad0d49b95365e743
+      created: 1787805837604
+      modified: 1787806837324
+      isPrivate: false
+      description: READ - Itens dos provedores de uma cidade, ordenados pelos mais vendidos.
+      sortKey: -1787805837604
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/busca/itens"
+    name: Buscar Itens
+    meta:
+      id: req_2613fb87eabc4174a2e18c0f745ebf6f
+      created: 1787805837604
+      modified: 1787806774551
+      isPrivate: false
+      description: Busca itens por nome (WHERE nome_item LIKE %q%).
+      sortKey: -1787805837604
+    method: GET
+    parameters:
+      - name: q
+        value: Banana
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/busca/vendedores"
+    name: Buscar Vendedores
+    meta:
+      id: req_40544d3e10e6418ebe35d460c0115f83
+      created: 1787805837605
+      modified: 1787806795555
+      isPrivate: false
+      description: Busca provedores onde categoria = 'vendedor' e nome LIKE %q%.
+      sortKey: -1787805837605
+    method: GET
+    parameters:
+      - name: q=Zé
+        value: ""
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/busca/servicos"
+    name: Buscar Servicos
+    meta:
+      id: req_1263be9cd5a343cea58743a7031015fd
+      created: 1787805837606
+      modified: 1787806808397
+      isPrivate: false
+      description: Busca provedores onde categoria = 'prestador de serviço' e nome LIKE %q%.
+      sortKey: -1787805837606
+    method: GET
+    parameters:
+      - name: q
+        value: string
+        disabled: true
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/itens/"
+    name: Criar novo item para um provedor
+    meta:
+      id: req_65ed673879624a74a59cc663fff6da97
+      created: 1787805837606
+      modified: 1787806686794
+      isPrivate: false
+      description: CREATE - Cadastra um item vinculado a um provedor.
+      sortKey: -1787805837606
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "nome_item": "Banana Prata",
+          "provedor": "Hortifruti do Zé",
+          "foto": "https://exemplo.com/banana.jpg",
+          "preco_varejo": 6.50,
+          "preco_atacado": 4.50,
+          "estoque": 100,
+          "vendidos": 0
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 201', () => {
+            insomnia.expect(insomnia.response.code).to.eql(201);
+        });
+
+        insomnia.test('Item criado com sucesso', () => {
+            if (insomnia.response.code === 201) {
+                const data = insomnia.response.json();
+                insomnia.expect(data).to.have.property('message');
+            }
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/itens/provedor/{{ _.nome_provedor }}"
+    name: Listar itens de um provedor específico
+    meta:
+      id: req_f75970bd76cd4d528699a3bf14661a25
+      created: 1787805837607
+      modified: 1787806406663
+      isPrivate: false
+      description: READ (Listar) - Retorna todos os itens cadastrados pelo provedor.
+      sortKey: -1787805837607
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+        insomnia.test('Response is a list of items', () => {
+            const data = insomnia.response.json();
+            insomnia.expect(Array.isArray(data)).to.be.true;
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/itens/{{ _.nome_item }}"
+    name: Obter detalhes de um item
+    meta:
+      id: req_d432c97255c944f9bfc30188f76ac7dc
+      created: 1787805837608
+      modified: 1787806701623
+      isPrivate: false
+      description: READ - Retorna os dados de um item específico pela chave primária.
+      sortKey: -1787805837608
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+        insomnia.test('Returns correct item details', () => {
+            if (insomnia.response.code === 200) {
+                const data = insomnia.response.json();
+                insomnia.expect(data).to.have.property('nome_item');
+                insomnia.expect(data).to.have.property('preco_varejo');
+            }
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/itens/{{ _.nome_item }}"
+    name: Atualizar dados de um item
+    meta:
+      id: req_7268803724a04bb8a7bc54c80ee0b40a
+      created: 1787805837609
+      modified: 1787806495398
+      isPrivate: false
+      description: UPDATE - Atualiza foto, preços e estoque do item.
+      sortKey: -1787805837609
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "foto": "https://exemplo.com/banana_atualizada.jpg",
+          "preco_varejo": 7.00,
+          "preco_atacado": 5.00,
+          "estoque": 120
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+        insomnia.test('Item atualizado com sucesso', () => {
+            const data = insomnia.response.json();
+            insomnia.expect(data.message).to.contain('atualizado com sucesso');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/itens/{{ _.nome_item }}"
+    name: Deletar um item
+    meta:
+      id: req_e93388c31e5f4901badb46403505593a
+      created: 1787805837609
+      modified: 1787806529677
+      isPrivate: false
+      description: DELETE - Remove um item do catálogo.
+      sortKey: -1787805837609
+    method: DELETE
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+        insomnia.test('Item removido com sucesso', () => {
+            const data = insomnia.response.json();
+            insomnia.expect(data.message).to.contain('removido com sucesso');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/provedores/"
+    name: Cadastrar novo provedor/vendedor
+    meta:
+      id: req_0285adfdda0d400e974e6311c915ddb9
+      created: 1787805837610
+      modified: 1787806618792
+      isPrivate: false
+      description: CREATE - Cadastra um novo provedor ou prestador de serviço.
+      sortKey: -1787805837610
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "nome": "Hortifruti do Zé",
+          "descricao": "Frutas e verduras frescas todo dia",
+          "foto_banner": "https://exemplo.com/banner.jpg",
+          "telefone": "88999999999",
+          "local": "Box 12 - Mercado Central",
+          "categoria": "vendedor",
+          "cidade": "Iguatu"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 201', () => {
+            insomnia.expect(insomnia.response.code).to.eql(201);
+        });
+
+        insomnia.test('Provedor cadastrado com sucesso', () => {
+            if (insomnia.response.code === 201) {
+                const data = insomnia.response.json();
+                insomnia.expect(data).to.have.property('message');
+            }
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/provedores/"
+    name: Listar todos os provedores/vendedores
+    meta:
+      id: req_269b4d7228c8430cac35ba001e1e0292
+      created: 1787805837610
+      modified: 1787806293415
+      isPrivate: false
+      description: READ (Listar) - Retorna todos os provedores cadastrados.
+      sortKey: -1787805837610
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+        insomnia.test('Response is an array of provedores', () => {
+          const data = insomnia.response.json();
+          insomnia.expect(Array.isArray(data)).to.be.true;
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/provedores/{{ _.nome_provedor }}"
+    name: Atualizar dados de um provedor
+    meta:
+      id: req_3ce86bf3e4fa4672ae6dab1b808466aa
+      created: 1787805837611
+      modified: 1787806736877
+      isPrivate: false
+      description: UPDATE - Atualiza as informações cadastrais do provedor.
+      sortKey: -1787805837611
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "descricao": "Frutas e verduras frescas todo dia - Atualizado",
+          "foto_banner": "https://exemplo.com/novo_banner.jpg",
+          "telefone": "88988888888",
+          "local": "Box 15 - Mercado Central",
+          "categoria": "vendedor",
+          "cidade": "Iguatu"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+        insomnia.test('Provedor atualizado com sucesso', () => {
+          const data = insomnia.response.json();
+          insomnia.expect(data.message).to.contain('atualizado com sucesso');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/provedores/{{ _.nome_provedor }}"
+    name: Obter detalhes de um provedor
+    meta:
+      id: req_461ff78b1668414194508708fe20c53a
+      created: 1787805837611
+      modified: 1787806300394
+      isPrivate: false
+      description: READ - Retorna os dados de um provedor específico pela PK.
+      sortKey: -1787805837611
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+        insomnia.test('Returns the correct provedor', () => {
+          const data = insomnia.response.json();
+          insomnia.expect(data).to.have.property('nome');
+          insomnia.expect(data).to.have.property('categoria');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/provedores/{{ _.nome_provedor }}"
+    name: Deletar um provedor
+    meta:
+      id: req_e838383b719c448aaae86c7d036e8783
+      created: 1787805837612
+      modified: 1787806538442
+      isPrivate: false
+      description: DELETE - Remove um provedor do sistema.
+      sortKey: -1787805837612
+    method: DELETE
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+        insomnia.test('Provedor removido com sucesso', () => {
+            const data = insomnia.response.json();
+            insomnia.expect(data.message).to.contain('removido com sucesso');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/provedores/{{ _.nome_provedor }}/faturamento"
+    name: Consultar total faturado por vendedor
+    meta:
+      id: req_bef47c40354e4069bc858a6697988aeb
+      created: 1787805837613
+      modified: 1787806321895
+      isPrivate: false
+      description: |-
+        Calcula a soma de vendas em dinheiro registradas para o vendedor:
+        SELECT SUM(valor_total) FROM vendas WHERE provedor = ?
+      sortKey: -1787805837613
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status code is 200', () => {
+          insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+        insomnia.test('Contains faturamento data', () => {
+          const data = insomnia.response.json();
+          insomnia.expect(data).to.have.property('provedor');
+          insomnia.expect(data).to.have.property('total_em_dinheiro');
+          insomnia.expect(typeof data.total_em_dinheiro).to.eql('number');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/carrinho/sync"
+    name: Atualiza vendas e estoque a partir do carrinho do React
+    meta:
+      id: req_74c1829056754b83971751c566856960
+      created: 1787805837614
+      modified: 1787806520694
+      isPrivate: false
+      description: >-
+        Recebe os itens selecionados no React no momento do redirecionamento
+
+        para o WhatsApp e aplica o incremento no campo 'vendidos' e decremento
+        no 'estoque'.
+      sortKey: -1787805837614
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "itens": [
+            {
+              "nome_item": "{{ _.nome_item }}",
+              "quantidade": 3
+            }
+          ]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    scripts:
+      afterResponse: >-
+        insomnia.test('Status code is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+
+        insomnia.test('Carrinho sincronizado com sucesso', () => {
+            const data = insomnia.response.json();
+            insomnia.expect(data.message).to.eql('Itens sincronizados com sucesso.');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/"
+    name: Root
+    meta:
+      id: req_16116156627c4e5698e7159dcb99a9f6
+      created: 1787805837615
+      modified: 1787806191879
+      isPrivate: false
+      description: ""
+      sortKey: -1787805837615
+    method: GET
+    scripts:
+      afterResponse: |-
+        insomnia.test('Status deve ser 200 OK', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+        insomnia.test('Resposta deve conter status online', () => {
+            const data = insomnia.response.json();
+            insomnia.expect(data.status).to.eql('online');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1787805480548
+    modified: 1787806707984
+environments:
+  name: Base Environment
+  meta:
+    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1787805480545
+    modified: 1787806707990
+    isPrivate: false
+  data:
+    base_url: http://127.0.0.1:8000
+    nome_provedor: Hortifruti do Zé
+    nome_item: Banana Prata
+    nome_cidade: Iguatu
+  subEnvironments:
+    - name: OpenAPI env example.com
+      meta:
+        id: env_0d7edc05431a4f1cb11bed8acbaf047c
+        created: 1787805837597
+        modified: 1787806707989
+        isPrivate: false
+        sortKey: 1787805837597
+      data:
+        base_url: http://127.0.0.1:8000
