@@ -15,7 +15,8 @@ import {
   Trash2,
   AlertTriangle
 } from "lucide-react";
-import { getTodosProvedores, type BannerItem } from "@/api";
+import { deleteProvedor, getTodosProvedores, postCriarProvedor, type BannerItem, type VendedorData } from "@/api";
+
 
 interface HomeAdministrativoProps {
   onNavigate: (page: string) => void;
@@ -30,18 +31,10 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | number | null>(null);
 
-  // Formulário
-  const [form, setForm] = useState({
-    nome: "",
-    email: "",
-    telefone: "",
-    senha: "",
-    cidade: "Iguatu-CE",
-    bannerName: "",
-    tipo: "vendedor" as "vendedor" | "servico",
-  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -64,115 +57,128 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
 
   const isEditing = editingId !== null;
 
-  // Abre modal para novo cadastro
-  const handleOpenCreate = () => {
-    setEditingId(null);
+  interface FormProvedor {
+  storeName: string;
+  phone: string;
+  pass: string;
+  city: string;
+  local: string; // Adicionado
+  bannerUrl: string;
+  tipo: "vendedor" | "servico";
+}
+
+// Estado do formulário
+const [form, setForm] = useState<FormProvedor>({
+  storeName: "",
+  phone: "",
+  pass: "",
+  city: "Iguatu-CE",
+  local: "",
+  bannerUrl: "",
+  tipo: "vendedor",
+});
+
+// Abre modal para novo cadastro (APENAS abre o modal, não faz POST)
+const handleOpenCreate = () => {
+  setEditingId(null);
+  setForm({
+    storeName: "",
+    phone: "",
+    pass: "",
+    city: "Iguatu-CE",
+    local: "",
+    bannerUrl: "",
+    tipo: "vendedor",
+  });
+  setModalOpen(true);
+};
+
+// Abre modal preenchido para edição
+const handleOpenEdit = (vendedor: BannerItem) => {
+  setEditingId(vendedor.id);
+  setForm({
+    storeName: vendedor.storeName,
+    phone: vendedor.phone || "",
+    pass: "", // Senha em branco na edição
+    city: vendedor.city || "Iguatu-CE",
+    local: vendedor.city || "Iguatu-CE", // Ajuste conforme necessário
+    bannerUrl: vendedor.image || "",
+    tipo: vendedor.category === "prestador de serviço" ? "servico" : "vendedor",
+  });
+  setModalOpen(true);
+};
+
+// Salvar (Cadastro ou Atualização) - AQUI é onde você usa o postCriarProvedor
+const handleSave = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  try {
+    setSaving(true);
+    
+    if (isEditing && editingId) {
+      // ATUALIZAÇÃO - usa putAtualizarProvedor
+      await putAtualizarProvedor(editingId.toString(), {
+        descricao: "",
+        foto_banner: form.bannerUrl,
+        telefone: form.phone,
+        local: form.local || form.city, // Usa local ou cidade como fallback
+        categoria: form.tipo === "vendedor" ? "vendedor" : "prestador de serviço",
+        cidade: form.city,
+      });
+      
+      console.log('Provedor atualizado com sucesso!');
+    } else {
+      // CRIAÇÃO - AQUI usa o postCriarProvedor
+      const payload: ProvedorCreateApi = {
+        nome: form.storeName,
+        descricao: "", // Você pode adicionar um campo de descrição no form se quiser
+        foto_banner: form.bannerUrl || undefined,
+        telefone: form.phone,
+        local: form.local || form.city, // Usa local ou cidade como fallback
+        categoria: form.tipo === "vendedor" ? "vendedor" : "prestador de serviço",
+        cidade: form.city,
+      };
+      
+      const resultado = await postCriarProvedor(payload);
+      console.log('Provedor criado com sucesso!', resultado);
+    }
+    
+    // Recarrega a lista de provedores
+    const provedoresAtualizados = await getTodosProvedores();
+    setProvedores(provedoresAtualizados);
+    
+    // Fecha o modal
+    setModalOpen(false);
+    
+    // Limpa o formulário
     setForm({
-      nome: "",
-      email: "",
-      telefone: "",
-      senha: "",
-      cidade: "Iguatu-CE",
-      bannerName: "",
+      storeName: "",
+      phone: "",
+      pass: "",
+      city: "Iguatu-CE",
+      local: "",
+      bannerUrl: "",
       tipo: "vendedor",
     });
-    setModalOpen(true);
-  };
-
-  // Abre modal preenchido para edição
-  const handleOpenEdit = (vendedor: VendedorData) => {
-    setEditingId(vendedor.id);
-    setForm({
-      nome: vendedor.name,
-      email: vendedor.email || "",
-      telefone: vendedor.telefone || "",
-      senha: "", // Senha em branco na edição para não sobrescrever caso não alterada
-      cidade: vendedor.cidade || "Iguatu-CE",
-      bannerName: vendedor.bannerName || "",
-      tipo: vendedor.tipo || "vendedor",
-    });
-    setModalOpen(true);
-  };
-
-  // Salvar (Cadastro ou Atualização com suporte a API)
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.nome || !form.email) {
-      alert("Por favor, preencha ao menos Nome e E-mail.");
-      return;
-    }
-
-    if (apiBaseUrl) {
-      try {
-        const endpoint = isEditing 
-          ? `${apiBaseUrl}/provedores/${editingId}` 
-          : `${apiBaseUrl}/provedores`;
-        const method = isEditing ? "PUT" : "POST";
-
-        await fetch(endpoint, {
-          method,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        });
-      } catch (err) {
-        console.error("Erro ao sincronizar com API:", err);
-      }
-    }
-
-    if (isEditing) {
-      setProvedores((prev) =>
-        prev.map((v) =>
-          v.id === editingId
-            ? {
-                ...v,
-                name: form.nome,
-                email: form.email,
-                telefone: form.telefone,
-                cidade: form.cidade,
-                bannerName: form.bannerName,
-                tipo: form.tipo,
-              }
-            : v
-        )
-      );
-    } else {
-      const novo: VendedorData = {
-        id: Date.now(),
-        name: form.nome,
-        email: form.email,
-        telefone: form.telefone,
-        cidade: form.cidade,
-        bannerName: form.bannerName,
-        tipo: form.tipo,
-        revenue: "R$ 0,00",
-        salesCount: 0,
-      };
-      setVendedores((prev) => [novo, ...prev]);
-    }
-
-    setModalOpen(false);
-  };
+    
+  } catch (err) {
+    console.error('Erro ao salvar provedor:', err);
+    alert('Erro ao salvar provedor. Verifique os dados e tente novamente.');
+  } finally {
+    setSaving(false);
+  }
+};
 
   // Exclusão de Provedor
   const handleDelete = async () => {
     if (!editingId) return;
 
     const confirmou = window.confirm(
-      `Tem certeza que deseja excluir o provedor "${form.nome}"? Essa ação não pode ser desfeita.`
+      `Tem certeza que deseja excluir o provedor "${form.storeName}"? Essa ação não pode ser desfeita.`
     );
     if (!confirmou) return;
 
-    if (apiBaseUrl) {
-      try {
-        await fetch(`${apiBaseUrl}/provedores/${editingId}`, {
-          method: "DELETE",
-        });
-      } catch (err) {
-        console.error("Erro ao excluir na API:", err);
-      }
-    }
-
-    setVendedores((prev) => prev.filter((v) => v.id !== editingId));
+    deleteProvedor(form.storeName);
     setModalOpen(false);
   };
 
@@ -218,7 +224,7 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
               Vendedores e Provedores
             </span>
             <span className="text-xs font-semibold text-muted-foreground">
-              {vendedores.length} cadastrados
+              {provedores.length} cadastrados
             </span>
           </div>
 
@@ -230,23 +236,23 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
           </div>
 
           <div className="divide-y divide-border/60">
-            {vendedores.map((vendedor) => (
+            {provedores.map((vendedor) => (
               <div
                 key={vendedor.id}
                 className="grid grid-cols-12 items-center px-5 py-4 transition-colors hover:bg-muted/20"
               >
                 <div className="col-span-6 sm:col-span-5 pr-2">
                   <p className="text-sm font-semibold text-foreground truncate">
-                    {vendedor.name}
+                    {vendedor.storeName}
                   </p>
                   <p className="text-xs text-muted-foreground truncate">
-                    {vendedor.email || "Sem e-mail cadastrado"}
+                    {vendedor.phone || "Sem e-mail cadastrado"}
                   </p>
                 </div>
 
-                <div className="col-span-3 sm:col-span-3">
+                {/*<div className="col-span-3 sm:col-span-3">
                   <span className="text-xs sm:text-sm font-bold text-foreground">
-                    {vendedor.revenue}
+                    {vendedor.}
                   </span>
                 </div>
 
@@ -254,20 +260,20 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-bold text-amber-600 dark:text-amber-400">
                     {vendedor.salesCount}
                   </span>
-                </div>
+                </div>*/}
 
-                {/* Botão de Edição */}
+                {/*{Botão de Edição }
                 <div className="col-span-1 sm:col-span-2 flex justify-end">
                   <button
                     type="button"
-                    onClick={() => handleOpenEdit(vendedor)}
-                    aria-label={`Editar ${vendedor.name}`}
+                    onClick={() => handleOpenEdit()}
+                    aria-label={`Editar ${vendedor.storeName}`}
                     className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary cursor-pointer"
                     title="Editar provedor"
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </button>
-                </div>
+                </div>*/}
               </div>
             ))}
           </div>
@@ -305,26 +311,15 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
               </button>
             </div>
 
-            {/* Formulário */}
+            {/* Formulário - CORRIGIDO */}
             <form onSubmit={handleSave} className="space-y-3.5 pt-4">
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-foreground">Nome</label>
                 <Input
                   required
                   placeholder="Ex: Auto Peças São Francisco"
-                  value={form.nome}
-                  onChange={(e) => setForm((prev) => ({ ...prev, nome: e.target.value }))}
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-foreground">E-mail</label>
-                <Input
-                  type="email"
-                  required
-                  placeholder="nome@email.com"
-                  value={form.email}
-                  onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
+                  value={form.storeName}
+                  onChange={(e) => setForm((prev) => ({ ...prev, storeName: e.target.value }))}
                 />
               </div>
 
@@ -332,8 +327,8 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
                 <label className="text-xs font-semibold text-foreground">Telefone / WhatsApp</label>
                 <Input
                   placeholder="(88) 98765-4321"
-                  value={form.telefone}
-                  onChange={(e) => setForm((prev) => ({ ...prev, telefone: e.target.value }))}
+                  value={form.phone}
+                  onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
                 />
               </div>
 
@@ -344,8 +339,8 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
                 <Input
                   type="password"
                   placeholder={isEditing ? "•••••••• (inalterada)" : "Defina uma senha de acesso"}
-                  value={form.senha}
-                  onChange={(e) => setForm((prev) => ({ ...prev, senha: e.target.value }))}
+                  value={form.pass}
+                  onChange={(e) => setForm((prev) => ({ ...prev, pass: e.target.value }))}
                 />
               </div>
 
@@ -355,26 +350,18 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
                   <label className="text-xs font-semibold text-foreground">Cidade</label>
                   <Input
                     placeholder="Iguatu-CE"
-                    value={form.cidade}
-                    onChange={(e) => setForm((prev) => ({ ...prev, cidade: e.target.value }))}
+                    value={form.city}
+                    onChange={(e) => setForm((prev) => ({ ...prev, city: e.target.value }))}
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-foreground">Banner</label>
-                  <label className="flex h-11 w-full items-center justify-center gap-2 rounded-md border border-dashed border-border bg-muted/40 px-3 text-xs font-medium text-muted-foreground hover:bg-accent cursor-pointer">
-                    <UploadCloud className="h-4 w-4 text-primary" />
-                    <span className="truncate">{form.bannerName || "Escolher banner"}</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) setForm((prev) => ({ ...prev, bannerName: file.name }));
-                      }}
-                    />
-                  </label>
+                  <label className="text-xs font-semibold text-foreground">URL do Banner</label>
+                  <Input
+                    placeholder="https://exemplo.com/banner.jpg"
+                    value={form.bannerUrl}
+                    onChange={(e) => setForm((prev) => ({ ...prev, bannerUrl: e.target.value }))}
+                  />
                 </div>
               </div>
 
@@ -415,15 +402,20 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
                     onClick={handleDelete}
                     className="h-11 px-3 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive cursor-pointer"
                     title="Excluir provedor"
+                    disabled={saving}
                   >
                     <Trash2 className="h-4 w-4" />
                     <span className="hidden sm:inline">Excluir</span>
                   </Button>
                 )}
 
-                <Button type="submit" className="flex-1 h-11 font-semibold gap-2 shadow-sm cursor-pointer">
+                <Button 
+                  type="submit" 
+                  className="flex-1 h-11 font-semibold gap-2 shadow-sm cursor-pointer"
+                  disabled={saving}
+                >
                   <CheckCircle2 className="h-4 w-4" />
-                  {isEditing ? "Salvar Alterações" : "Cadastrar Provedor"}
+                  {saving ? "Salvando..." : isEditing ? "Salvar Alterações" : "Cadastrar Provedor"}
                 </Button>
               </div>
             </form>

@@ -7,7 +7,7 @@ import type {
   ProvedorResponseApi,
   ItemResponseApi,
   CarrinhoSyncRequestApi,
-} from "./types";
+} from "@/types";
 
 /** Formata um número como moeda BRL simples (ex: 12.5 -> "R$ 12,50") */
 export function formatCurrency(value: number): string {
@@ -104,6 +104,8 @@ export function mapProvedorToBannerItem(
     items,
   };
 }
+
+
 
 export function mapProvedoresToBannerItems(
   provedores: ProvedorResponseApi[]
