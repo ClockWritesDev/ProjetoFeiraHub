@@ -28,6 +28,19 @@ export interface BannerItem {
   linkUrl?: string;
 }
 
+
+export interface VendedorData {
+  id: string | number;
+  name: string;
+  email?: string;
+  telefone?: string;
+  cidade?: string;
+  bannerName?: string;
+  tipo?: "vendedor" | "servico";
+  revenue: string;
+  salesCount: number;
+}
+
 export interface ItemProvedor {
   id: string | number;
   name: string;
