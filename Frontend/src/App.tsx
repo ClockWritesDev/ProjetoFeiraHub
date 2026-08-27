@@ -7,6 +7,7 @@ import HomeAdministrativo from "@/pages/HomeAdministrativo";
 import PerfilProvedor from "@/pages/PerfilProvedor";
 import ResultsProvedor from "@/pages/ResultsProvedor";
 import ResultsItens from "@/pages/ResultsItens";
+import ResultsServices from "./pages/ResultsServices";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>("inicial");
@@ -43,6 +44,13 @@ export default function App() {
 
       {currentPage === "results_itens" && (
         <ResultsItens
+          searchQuery={searchQuery}
+          onNavigate={handleNavigate}
+        />
+      )}
+      
+      {currentPage === "results_services" && (
+        <ResultsServices
           searchQuery={searchQuery}
           onNavigate={handleNavigate}
         />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Banner from "@/components/Banner";
 import ProductSection from "@/components/ProductSection";
@@ -9,6 +9,7 @@ import { vendedoresDestaque } from "@/data/vendedores";
 import { mockProducts, cartItems as initialCartItems } from "@/data/products";
 import { Store, ShoppingBag, Wrench } from "lucide-react";
 import type { BannerItem, CartItem, Product, SearchTab } from "@/types";
+import { getBuscarItens } from "@/api/Get";
 
 interface HomeClienteProps {
   onNavigate?: (page: string, data?: any) => void;
@@ -19,6 +20,10 @@ export default function HomeCliente({ onNavigate }: HomeClienteProps) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [items, setItems] = useState<CartItem[]>(initialCartItems);
   const [form, setForm] = useState({ name: "", address: "" });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [productsList, setProductsList] = useState<Product[]>([]);
+  const [servicesList, setServicesList] = useState<Product[]>([]);
 
   const handleAddToCart = (product: Product, quantity = 1) => {
     const newItem: CartItem = {
@@ -54,9 +59,31 @@ export default function HomeCliente({ onNavigate }: HomeClienteProps) {
     }
   };
 
-  const produtosList = mockProducts.filter((item) => item.type !== "servico");
-  const servicosList = mockProducts.filter((item) => item.type === "servico");
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const itens = await getBuscarItens("");
+        
+        // Filter by search term and optionally by type (Product vs Service)
+        const filteredProducts = itens.filter((item) => item.type !== "servico");
+        const filteredServices = itens.filter((item) => item.type === "servico");
 
+        setProductsList(filteredProducts);
+        setServicesList(filteredServices);
+      } catch (err) {
+        setError("Erro ao carregar resultados");
+        console.error('Error fetching items:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, []);
+  
   return (
     <div className="flex min-h-screen flex-col text-foreground">
       <Header
@@ -101,7 +128,7 @@ export default function HomeCliente({ onNavigate }: HomeClienteProps) {
           title="Produtos"
           subtitle="Itens frescos, alimentos, artesanato e comércio local"
           icon={<ShoppingBag className="h-5 w-5" />}
-          items={produtosList}
+          items={productsList}
           onAdd={handleAddToCart}
           onOpenDetails={(product) => setSelectedProduct(product)}
           defaultCollapsed={false}
@@ -113,7 +140,7 @@ export default function HomeCliente({ onNavigate }: HomeClienteProps) {
           title="Serviços"
           subtitle="Profissionais autônomos, reparos, estética e projetos digitais"
           icon={<Wrench className="h-5 w-5" />}
-          items={servicosList}
+          items={servicesList}
           onAdd={handleAddToCart}
           onOpenDetails={(product) => setSelectedProduct(product)}
           defaultCollapsed={false}

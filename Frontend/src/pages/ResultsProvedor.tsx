@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
   SearchX 
 } from "lucide-react";
 import type { BannerItem } from "@/types";
+import { getTodosProvedores } from "@/api";
 
 interface ResultsProvedorProps {
   searchQuery?: string;
@@ -25,15 +26,38 @@ export default function ResultsProvedor({
   onNavigate,
 }: ResultsProvedorProps) {
   const [searchFocused, setSearchFocused] = useState(false);
+  const [results, setResults] = useState<BannerItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const resultados = vendedoresDestaque.filter((vendedor) => {
-    const q = searchQuery.toLowerCase();
-    return (
-      vendedor.storeName.toLowerCase().includes(q) ||
-      vendedor.description.toLowerCase().includes(q) ||
-      (vendedor.category && vendedor.category.toLowerCase().includes(q))
-    );
-  });
+  useEffect(() => {
+      const fetchResults = async () => {
+        try {
+          setLoading(true);
+          setError(null);
+          
+          const provedores = await getTodosProvedores();
+          
+          const filteredResults = provedores.filter((vendedor) => {
+            const q = searchQuery.toLowerCase();
+            return (
+              vendedor.storeName.toLowerCase().includes(q) ||
+              vendedor.description.toLowerCase().includes(q) ||
+              (vendedor.category && vendedor.category.toLowerCase().includes(q))
+            );
+          });
+          
+          setResults(filteredResults);
+        } catch (err) {
+          setError("Erro ao carregar resultados");
+          console.error('Error fetching items:', err);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchResults();
+    }, [searchQuery]);
 
   return (
     <div
@@ -69,13 +93,13 @@ export default function ResultsProvedor({
             </h1>
             <p className="text-xs text-muted-foreground sm:text-sm">
               {searchQuery
-                ? `Resultados para "${searchQuery}" (${resultados.length} encontrados)`
-                : `Exibindo todos os ${resultados.length} parceiros locais`}
+                ? `Resultados para "${searchQuery}" (${results.length} encontrados)`
+                : `Exibindo todos os ${results.length} parceiros locais`}
             </p>
           </div>
         </div>
 
-        {resultados.length === 0 ? (
+        {results.length === 0 ? (
           <div className="flex h-56 flex-col items-center justify-center rounded-2xl border border-dashed border-border p-6 text-center text-muted-foreground space-y-3">
             <SearchX className="h-10 w-10 opacity-40" />
             <div>
@@ -93,7 +117,7 @@ export default function ResultsProvedor({
           </div>
         ) : (
           <div className="space-y-3">
-            {resultados.map((vendedor) => (
+            {results.map((vendedor) => (
               <Card
                 key={vendedor.id}
                 onClick={() => onNavigate("profile_provedor", vendedor.id)}

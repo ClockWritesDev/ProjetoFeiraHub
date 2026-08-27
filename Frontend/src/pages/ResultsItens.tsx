@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import type { CartItem, CustomerForm, Product, SearchTab } from "@/types";
 import ProductModal from "@/components/ProductModal";
+import { getBuscarItens } from "@/api";
 
 interface ResultsItensProps {
   searchQuery?: string;
@@ -29,35 +30,62 @@ export default function ResultsItens({
   const [items, setItems] = useState<CartItem[]>(initialCartItems);
   const [form, setForm] = useState<CustomerForm>({ name: "", address: "" });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [resultados, setResultados] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [vendedoresDestaque, setVendedoresDestaque] = useState<any[]>([]);
 
   const handleTabChange = (tab: SearchTab) => {
     setActiveTab(tab);
     if (tab === "Vendedores") {
-      onNavigate("results_provedor", searchQuery);
-    } else {
+      onNavigate("results_provedor", query);
+    } else if (tab === "Produtos") {
       onNavigate("results_itens", searchQuery);
+    } else {
+      onNavigate("results_services", searchQuery);
     }
   };
 
   const handleSearchSubmit = (query: string, tab: SearchTab) => {
     if (tab === "Vendedores") {
       onNavigate("results_provedor", query);
+    } else if (tab === "Produtos") {
+      onNavigate("results_itens", searchQuery);
     } else {
-      onNavigate("results_itens", query);
+      onNavigate("results_services", searchQuery);
     }
   };
 
-  // Filtra por termo de busca e, opcionalmente, pelo tipo (Produto vs Serviço)
-  const resultados = mockProducts.filter((prod) => {
-    const matchesQuery = prod.name.toLowerCase().includes(searchQuery.toLowerCase());
-    if (activeTab === "Serviços") {
-      return matchesQuery && prod.type === "servico";
-    }
-    if (activeTab === "Produtos") {
-      return matchesQuery && prod.type !== "servico";
-    }
-    return matchesQuery;
-  });
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const items = await getBuscarItens(searchQuery);
+        
+        // Filter by search term and optionally by type (Product vs Service)
+        const filteredResults = items.filter((prod) => {
+          if (activeTab === "Serviços") {
+            return prod.type === "servico";
+          }
+          if (activeTab === "Produtos") {
+            return prod.type !== "servico";
+          }
+          return true; // Return all items
+        });
+        
+        setResultados(filteredResults);
+      } catch (err) {
+        setError("Erro ao carregar resultados");
+        console.error('Error fetching items:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, [searchQuery, activeTab]);
 
   const handleAddToCart = (product: Product) => {
     const newItem: CartItem = {

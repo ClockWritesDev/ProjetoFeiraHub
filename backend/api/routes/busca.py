@@ -15,7 +15,6 @@ def buscar_itens(
     resultados = db.search_item(q)
     return [dict(row) for row in resultados]
 
-
 @router.get("/vendedores", response_model=list[ProvedorResponse])
 def buscar_vendedores(
     q: str = Query(default="", description="Termo para buscar no nome do vendedor"),
