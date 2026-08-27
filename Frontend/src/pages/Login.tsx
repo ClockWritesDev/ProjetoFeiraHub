@@ -88,13 +88,12 @@ export default function Login({ onNavigate }: LoginProps) {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-foreground">
-                E-mail {role === "administrador" ? "Administrativo" : "do Negócio"}
+                {role === "administrador" ? "E-mail Administrativo" : "Nome do Negócio"}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                 <Input
-                  type="email"
-                  placeholder={role === "administrador" ? "admin@feirahub.com" : "vendedor@feirahub.com"}
+                  placeholder={role === "administrador" ? "admin@feirahub.com" : "loja A"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-9 h-10"

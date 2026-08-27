@@ -133,7 +133,7 @@ export default function ResultsServices({
               Voltar ao Catálogo
             </Button>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-              {activeTab === "Serviços" ? "Serviços Encontrados" : "Produtos Encontrados"}
+              {activeTab === "Serviços" ? "Serviços Encontrados" : "Serviços Encontrados"}
             </h1>
             <p className="text-xs text-muted-foreground sm:text-sm">
               {searchQuery
