@@ -134,7 +134,7 @@ export default function Banner({
             className={cn(
               "h-2 rounded-full transition-all duration-300 cursor-pointer",
               currentIndex === idx
-                ? "w-6 bg-primary"
+                ? "w-6 bg-amarelo"
                 : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60"
             )}
           />

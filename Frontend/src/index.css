@@ -1,4 +1,4 @@
-/* 1. Importa o Tailwind v4 (Substitui o antigo @tailwind base/components/utilities) */
+/* 1. Importa o Tailwind v4 */
 @import "tailwindcss";
 
 /* 2. Define o seu tema e as variáveis de cor para o Tailwind v4 */
@@ -8,6 +8,7 @@
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
   --color-primary: hsl(var(--primary));
+  --color-amarelo: hsl(var(--yellow));
   --color-primary-foreground: hsl(var(--primary-foreground));
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
@@ -32,6 +33,7 @@
   --foreground: 222 20% 15%;
   --card: 0 0% 100%;
   --card-foreground: 222 20% 15%;
+  --yellow: 31 100% 63%;
   --primary: 146 60% 29%;
   --primary-foreground: 0 0% 100%;
   --secondary: 30 10% 96%;
@@ -48,14 +50,37 @@
   --radius: 0.75rem;
 }
 
-/* 4. Estilos globais usando @utility ou seletores diretos (O v4 não usa mais @layer base) */
+/* 4. Estilos globais */
 * {
   @apply border-border;
 }
 
 body {
-  @apply bg-background text-foreground;
   font-family: "Segoe UI", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: 
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(37, 104, 31, 0.15) 0%,
+      rgba(37, 104, 31, 0.08) 15%,
+      rgba(37, 104, 31, 0.03) 30%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 30% 80%,
+      rgba(37, 104, 31, 0.08) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 70% 80%,
+      rgba(37, 104, 31, 0.06) 0%,
+      transparent 40%
+    ),
+    #ffffff;
+  background-attachment: fixed;
+  color: hsl(var(--foreground));
 }
 
 /* Esconde scrollbar da faixa de produtos mantendo a rolagem */

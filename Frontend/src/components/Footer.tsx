@@ -1,10 +1,16 @@
-import { Sprout, Heart } from "lucide-react";
+import { Heart, MapPin } from "lucide-react";
 
 interface FooterProps {
   onNavigate?: (page: string) => void;
+  cityName?: string;
+  logoSrc?: string;
 }
 
-export default function Footer({ onNavigate }: FooterProps) {
+export default function Footer({
+  onNavigate,
+  cityName = "Iguatu",
+  logoSrc = "./logo.svg",
+  }: FooterProps) {
   return (
     <footer className="mt-16 border-t border-border bg-card text-card-foreground">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
@@ -13,13 +19,22 @@ export default function Footer({ onNavigate }: FooterProps) {
           {/* Marca / Link para Apresentação */}
           <div
             onClick={() => onNavigate?.("inicial")}
-            className="flex items-center gap-2 font-bold text-lg text-primary cursor-pointer select-none transition-opacity hover:opacity-85"
-            title="Voltar para a Apresentação"
+            className="group flex shrink-0 cursor-pointer select-none items-center gap-1 transition-opacity hover:opacity-90"
+            title="Ir para o início"
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-              <Sprout className="h-5 w-5" />
-            </span>
-            Feira Hub
+            <div className="h-fit w-fit flex flex-row items-center leading-tight">
+              <span className="flex justify-center -mb-2">
+                {logoSrc ? (
+                  <img src={logoSrc} alt="Feira Hub Logo" className="h-28 w-28 object-contain" />
+                ) : (
+                  <></>
+                )}
+              </span>
+              <span className="flex items-center gap-0.5 text-[11px] font-medium text-muted-foreground">
+                <MapPin className="h-3 w-3 text-primary/80" />
+                {cityName}
+              </span>
+            </div>
           </div>
 
           {/* Mensagem Institucional */}

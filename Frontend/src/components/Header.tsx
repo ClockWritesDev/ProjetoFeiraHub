@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Search, ShoppingCart, Sprout, LogIn, MapPin, Store } from "lucide-react";
+import { Search, ShoppingCart, LogIn, MapPin, Store } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ export default function Header({
   onGoToCatalog,
   onSearchSubmit,
   cityName = "Iguatu",
-  logoSrc,
+  logoSrc = "./logo.svg",
   hideCart = false,
 }: HeaderProps) {
   // Estados isolados internamente
@@ -60,20 +60,16 @@ export default function Header({
         {/* LOGO */}
         <div
           onClick={onLogoClick}
-          className="group flex shrink-0 cursor-pointer select-none items-center gap-2.5 transition-opacity hover:opacity-90"
+          className="group flex shrink-0 cursor-pointer select-none items-center gap-1 transition-opacity hover:opacity-90"
           title="Ir para o início"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 overflow-hidden">
-            {logoSrc ? (
-              <img src={logoSrc} alt="Feira Hub Logo" className="h-6 w-6 object-contain" />
-            ) : (
-              <Sprout className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
-            )}
-          </div>
-
-          <div className="flex flex-col leading-tight">
-            <span className="text-base font-bold tracking-tight text-primary sm:text-lg">
-              Feira Hub
+          <div className="h-fit w-fit flex flex-row items-center leading-tight">
+            <span className="flex justify-center -mb-2">
+              {logoSrc ? (
+                <img src={logoSrc} alt="Feira Hub Logo" className="h-28 w-28 object-contain" />
+              ) : (
+                <></>
+              )}
             </span>
             <span className="flex items-center gap-0.5 text-[11px] font-medium text-muted-foreground">
               <MapPin className="h-3 w-3 text-primary/80" />
@@ -98,7 +94,7 @@ export default function Header({
             <Button
               type="submit"
               size="sm"
-              className="absolute right-1 h-7 px-2.5 text-xs font-semibold rounded-md gap-1 cursor-pointer"
+              className="absolute right-1 h-7 px-2.5 text-xs font-semibold rounded-md gap-1 cursor-pointer bg-amarelo hover:bg-amarelo/20"
             >
               <Search className="h-3 w-3" />
               <span className="hidden sm:inline">Buscar</span>

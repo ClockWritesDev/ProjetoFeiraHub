@@ -34,7 +34,7 @@ export default function HomeApresentacao({ onNavigate }: HomeApresentacaoProps) 
 
   return (
     <div 
-      className="flex min-h-screen flex-col bg-background text-foreground"
+      className="flex min-h-screen flex-col text-foreground"
       onClick={() => searchFocused && setSearchFocused(false)}
     >
       <div onClick={(e) => e.stopPropagation()}>
@@ -72,7 +72,7 @@ export default function HomeApresentacao({ onNavigate }: HomeApresentacaoProps) 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
                   <Button
                     size="lg"
-                    className="gap-2 text-base font-semibold shadow-md cursor-pointer"
+                    className="gap-2 text-base font-semibold shadow-md cursor-pointer bg-amarelo hover:bg-amarelo/20"
                     onClick={() => onNavigate("home_cliente")}
                   >
                     <ShoppingBag className="h-5 w-5" />

@@ -6,6 +6,8 @@ import CartDrawer from "@/components/CartDrawer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { vendedoresDestaque } from "@/data/vendedores";
+import ProductModal from "@/components/ProductModal";
+
 import { 
   ArrowLeft, 
   Store, 
@@ -33,6 +35,7 @@ export default function PerfilProvedor({
   const [cartOpen, setCartOpen] = useState(false);
   const [items, setItems] = useState<CartItem[]>(initialCartItems);
   const [form, setForm] = useState<CustomerForm>({ name: "", address: "" });
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   // Busca provedor por ID ou usa o primeiro por padrão
   const provedor: BannerItem =
@@ -70,7 +73,7 @@ export default function PerfilProvedor({
     : undefined;
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <div className="flex min-h-screen flex-col text-foreground">
       {/* Header com contagem e acionamento do Carrinho */}
       <Header
         onLogoClick={() => onNavigate("inicial")}
@@ -184,6 +187,7 @@ export default function PerfilProvedor({
                   key={prod.id}
                   product={prod}
                   onAdd={handleAddToCart}
+                  onOpenDetails={(product) => setSelectedProduct(product)}
                 />
               ))}
             </div>
@@ -192,7 +196,21 @@ export default function PerfilProvedor({
       </main>
 
       <Footer onNavigate={onNavigate} />
-
+      {/* Modal de Detalhes do Produto - ADICIONAR AQUI */}
+      <ProductModal
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onAddToCart={handleAddToCart}
+        onNavigateSeller={(sellerName) => {
+          setSelectedProduct(null);
+          const seller = vendedoresDestaque.find((v) =>
+            v.storeName.toLowerCase().includes(sellerName.toLowerCase())
+          );
+          if (seller) {
+            onNavigate?.("profile_provedor", seller.id);
+          }
+        }}
+      />
       {/* Gaveta do Carrinho */}
       <CartDrawer
         open={cartOpen}

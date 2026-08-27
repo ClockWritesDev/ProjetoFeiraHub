@@ -54,7 +54,7 @@ export default function ResultsProvedor({
 
   return (
     <div
-      className="flex min-h-screen flex-col bg-background text-foreground"
+      className="flex min-h-screen flex-col text-foreground"
       onClick={() => searchFocused && setSearchFocused(false)}
     >
       <div onClick={(e) => e.stopPropagation()}>

@@ -58,7 +58,7 @@ export default function HomeCliente({ onNavigate }: HomeClienteProps) {
   const servicosList = mockProducts.filter((item) => item.type === "servico");
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <div className="flex min-h-screen flex-col text-foreground">
       <Header
         cityName="Iguatu"
         cartCount={items.length}

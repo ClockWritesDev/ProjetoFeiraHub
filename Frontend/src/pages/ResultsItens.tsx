@@ -12,6 +12,7 @@ import {
   ImageOff 
 } from "lucide-react";
 import type { CartItem, CustomerForm, Product, SearchTab } from "@/types";
+import ProductModal from "@/components/ProductModal";
 
 interface ResultsItensProps {
   searchQuery?: string;
@@ -27,6 +28,7 @@ export default function ResultsItens({
   const [cartOpen, setCartOpen] = useState(false);
   const [items, setItems] = useState<CartItem[]>(initialCartItems);
   const [form, setForm] = useState<CustomerForm>({ name: "", address: "" });
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const handleTabChange = (tab: SearchTab) => {
     setActiveTab(tab);
@@ -80,7 +82,7 @@ export default function ResultsItens({
 
   return (
     <div
-      className="flex min-h-screen flex-col bg-background text-foreground"
+      className="flex min-h-screen flex-col text-foreground"
       onClick={() => searchFocused && setSearchFocused(false)}
     >
       <div onClick={(e) => e.stopPropagation()}>
@@ -142,7 +144,8 @@ export default function ResultsItens({
             {resultados.map((product) => (
               <Card
                 key={product.id}
-                className="group flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-border/80 transition-all hover:border-primary/40 hover:shadow-md"
+                className="group flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-border/80 transition-all hover:border-primary/40 hover:shadow-md cursor-pointer"
+                onClick={() => setSelectedProduct(product)}
               >
                 <div className="flex flex-1 items-center gap-4 w-full sm:w-auto">
                   <div className="relative h-20 w-20 sm:h-22 sm:w-22 shrink-0 overflow-hidden rounded-xl bg-muted/40 border border-border/60">
@@ -192,7 +195,10 @@ export default function ResultsItens({
 
                 <div className="shrink-0 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40">
                   <Button
-                    onClick={() => handleAddToCart(product)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // ← IMPEDE QUE O CLIQUE PROPAGUE PARA O CARD
+                      handleAddToCart(product);
+                    }}
                     size="sm"
                     className="w-full sm:w-auto gap-1.5 font-semibold text-xs cursor-pointer shadow-xs"
                   >
@@ -207,7 +213,21 @@ export default function ResultsItens({
       </main>
 
       <Footer onNavigate={onNavigate} />
-
+      {/* Modal de Detalhes do Produto - ADICIONAR AQUI */}
+      <ProductModal
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onAddToCart={handleAddToCart}
+        onNavigateSeller={(sellerName) => {
+          setSelectedProduct(null);
+          const seller = vendedoresDestaque.find((v) =>
+            v.storeName.toLowerCase().includes(sellerName.toLowerCase())
+          );
+          if (seller) {
+            onNavigate?.("profile_provedor", seller.id);
+          }
+        }}
+      />
       <CartDrawer
         open={cartOpen}
         items={items}

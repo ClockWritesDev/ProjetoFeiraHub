@@ -30,7 +30,7 @@ export default function Login({ onNavigate }: LoginProps) {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <div className="flex min-h-screen flex-col text-foreground">
       {/* Header */}
       <Header
         onLogoClick={() => onNavigate("inicial")}
