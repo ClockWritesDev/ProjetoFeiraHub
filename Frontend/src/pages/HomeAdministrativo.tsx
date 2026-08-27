@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -15,51 +15,7 @@ import {
   Trash2,
   AlertTriangle
 } from "lucide-react";
-
-export interface VendedorData {
-  id: string | number;
-  name: string;
-  email?: string;
-  telefone?: string;
-  cidade?: string;
-  bannerName?: string;
-  tipo?: "vendedor" | "servico";
-  revenue: string;
-  salesCount: number;
-}
-
-const INITIAL_VENDEDORES: VendedorData[] = [
-  { 
-    id: 1, 
-    name: "Ikarius Auto Peças", 
-    email: "contato@ikarius.com", 
-    telefone: "(88) 99876-1234",
-    cidade: "Iguatu-CE",
-    tipo: "vendedor",
-    revenue: "R$ 189,90", 
-    salesCount: 156 
-  },
-  { 
-    id: 2, 
-    name: "Matheus Social Media", 
-    email: "matheus@design.com", 
-    telefone: "(88) 98822-4455",
-    cidade: "Iguatu-CE",
-    tipo: "servico",
-    revenue: "R$ 299,00", 
-    salesCount: 156 
-  },
-  { 
-    id: 3, 
-    name: "Azaí", 
-    email: "pedidos@azai.com", 
-    telefone: "(88) 99711-2233",
-    cidade: "Iguatu-CE",
-    tipo: "vendedor",
-    revenue: "R$ 79,90", 
-    salesCount: 210 
-  },
-];
+import { getTodosProvedores, type BannerItem } from "@/api";
 
 interface HomeAdministrativoProps {
   onNavigate: (page: string) => void;
@@ -68,7 +24,7 @@ interface HomeAdministrativoProps {
 }
 
 export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdministrativoProps) {
-  const [vendedores, setVendedores] = useState<VendedorData[]>(INITIAL_VENDEDORES);
+  const [provedores, setProvedores] = useState<BannerItem[]>([]);
   
   // Controle de estado do Modal
   const [modalOpen, setModalOpen] = useState(false);
@@ -84,6 +40,27 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
     bannerName: "",
     tipo: "vendedor" as "vendedor" | "servico",
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const provedores = await getTodosProvedores();
+        setProvedores(provedores);
+      } catch (err) {
+        setError("Erro ao carregar resultados");
+        console.error('Error fetching items:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, []);
 
   const isEditing = editingId !== null;
 
@@ -143,7 +120,7 @@ export default function HomeAdministrativo({ onNavigate, apiBaseUrl }: HomeAdmin
     }
 
     if (isEditing) {
-      setVendedores((prev) =>
+      setProvedores((prev) =>
         prev.map((v) =>
           v.id === editingId
             ? {

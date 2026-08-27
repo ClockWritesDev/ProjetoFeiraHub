@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -15,9 +15,11 @@ import {
   Phone, 
   MessageCircle, 
   CheckCircle2, 
-  PackageSearch 
+  PackageSearch, 
+  Loader2
 } from "lucide-react";
 import type { BannerItem, CartItem, CustomerForm, Product } from "@/types";
+import { getTodosProvedores } from "@/api";
 
 interface PerfilProvedorProps {
   provedorId?: string | number | null;
@@ -36,11 +38,29 @@ export default function PerfilProvedor({
   const [items, setItems] = useState<CartItem[]>(initialCartItems);
   const [form, setForm] = useState<CustomerForm>({ name: "", address: "" });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [provedor, setProvedor] = useState<BannerItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Busca provedor por ID ou usa o primeiro por padrão
-  const provedor: BannerItem =
-    vendedoresDestaque.find((v) => String(v.id) === String(provedorId)) ||
-    vendedoresDestaque[0];
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const provedores = await getTodosProvedores();
+        const foundProvedor = provedores.find((v) => String(v.id) === String(provedorId));
+        setProvedor(foundProvedor || provedores[0] || null);
+      } catch (err) {
+        setError("Erro ao carregar resultados");
+        console.error('Error fetching items:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, [provedorId]);
 
   const handleAddToCart = (product: Product) => {
     const newItem: CartItem = {
@@ -48,7 +68,7 @@ export default function PerfilProvedor({
       name: product.name,
       price: product.retail.split(" - ")[0],
       category: product.type === "servico" ? "Serviço" : "Varejo",
-      image: product.image,
+      image: product.image || "",
     };
     
     const updated = [...items, newItem];
@@ -68,6 +88,40 @@ export default function PerfilProvedor({
     setCartOpen(false);
   };
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-muted-foreground">Carregando perfil do provedor...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error or not found state
+  if (error || !provedor) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6">
+        <div className="text-center space-y-3">
+          <PackageSearch className="h-12 w-12 text-muted-foreground mx-auto" />
+          <h1 className="text-xl font-bold">Provedor não encontrado</h1>
+          <p className="text-sm text-muted-foreground">
+            {error || "Não foi possível carregar os dados deste provedor."}
+          </p>
+          <Button 
+            onClick={() => onNavigate("home_cliente")}
+            className="mt-2"
+          >
+            Voltar ao Catálogo
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Now TypeScript knows 'provedor' is not null
   const whatsappLink = provedor.phone
     ? `https://wa.me/55${provedor.phone.replace(/\D/g, "")}?text=Olá,%20vi%20seu%20perfil%20no%20FeiraHub!`
     : undefined;
@@ -99,11 +153,17 @@ export default function PerfilProvedor({
         {/* Card do Provedor */}
         <Card className="relative overflow-hidden border-border/80 p-0 shadow-md">
           <div className="relative h-48 sm:h-64 w-full bg-muted overflow-hidden">
-            <img
-              src={provedor.image}
-              alt={provedor.storeName}
-              className="h-full w-full object-cover"
-            />
+            {provedor.image ? (
+              <img
+                src={provedor.image}
+                alt={provedor.storeName}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                <Store className="h-12 w-12 text-muted-foreground/40" />
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
             <div className="absolute bottom-4 left-4 right-4 text-white">
@@ -155,7 +215,7 @@ export default function PerfilProvedor({
                 Sobre o Estabelecimento
               </h2>
               <p className="text-sm sm:text-base text-foreground leading-relaxed">
-                {provedor.longDescription || provedor.description}
+                {provedor.longDescription || provedor.description || "Sem descrição disponível."}
               </p>
             </div>
           </div>
@@ -196,7 +256,8 @@ export default function PerfilProvedor({
       </main>
 
       <Footer onNavigate={onNavigate} />
-      {/* Modal de Detalhes do Produto - ADICIONAR AQUI */}
+      
+      {/* Modal de Detalhes do Produto */}
       <ProductModal
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
@@ -211,6 +272,7 @@ export default function PerfilProvedor({
           }
         }}
       />
+      
       {/* Gaveta do Carrinho */}
       <CartDrawer
         open={cartOpen}

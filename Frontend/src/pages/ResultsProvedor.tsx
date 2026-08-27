@@ -31,33 +31,33 @@ export default function ResultsProvedor({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-      const fetchResults = async () => {
-        try {
-          setLoading(true);
-          setError(null);
-          
-          const provedores = await getTodosProvedores();
-          
-          const filteredResults = provedores.filter((vendedor) => {
-            const q = searchQuery.toLowerCase();
-            return (
-              vendedor.storeName.toLowerCase().includes(q) ||
-              vendedor.description.toLowerCase().includes(q) ||
-              (vendedor.category && vendedor.category.toLowerCase().includes(q))
-            );
-          });
-          
-          setResults(filteredResults);
-        } catch (err) {
-          setError("Erro ao carregar resultados");
-          console.error('Error fetching items:', err);
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetchResults();
-    }, [searchQuery]);
+    const fetchResults = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const provedores = await getTodosProvedores();
+        
+        const filteredResults = provedores.filter((vendedor) => {
+          const q = searchQuery.toLowerCase();
+          return (
+            vendedor.storeName.toLowerCase().includes(q) ||
+            vendedor.description.toLowerCase().includes(q) ||
+            (vendedor.category && vendedor.category.toLowerCase().includes(q))
+          );
+        });
+        
+        setResults(filteredResults);
+      } catch (err) {
+        setError("Erro ao carregar resultados");
+        console.error('Error fetching items:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, [searchQuery]);
 
   return (
     <div
@@ -125,11 +125,17 @@ export default function ResultsProvedor({
               >
                 <div className="flex flex-1 items-center gap-4 w-full sm:w-auto">
                   <div className="relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-xl bg-muted border border-border/60">
-                    <img
-                      src={vendedor.image}
-                      alt={vendedor.storeName}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                    {vendedor.image ? (
+                      <img
+                        src={vendedor.image}
+                        alt={vendedor.storeName}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <Store className="h-8 w-8 text-muted-foreground/40" />
+                      </div>
+                    )}
                   </div>
 
                   <div className="min-w-0 flex-1 space-y-1">
