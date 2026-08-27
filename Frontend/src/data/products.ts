@@ -9,6 +9,7 @@ export const mockProducts: Product[] = [
     retail: "R$ 38,00",
     wholesale: "R$ 28,00",
     type: "produto",
+    hot: true,
   },
   {
     id: "prod-2",

@@ -1,6 +1,7 @@
 import { Plus, ImageOff } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import type { Product } from "@/types";
+import HotNotification from "./HotNotification";
 
 interface ProductCardProps {
   product: Product;
@@ -39,6 +40,10 @@ export default function ProductCard({ product, onAdd, onOpenDetails }: ProductCa
       onClick={() => onOpenDetails?.(product)}
       className="group relative flex w-full shrink-0 flex-col overflow-hidden rounded-2xl border border-border/80 bg-card p-3 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg cursor-pointer select-none"
     >
+      {/*Notificação de recomendação*/}
+      {
+        product.hot ? <HotNotification/> : <></>
+      }
       {/* Imagem do Produto */}
       <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-muted/40">
         {product.image ? (

@@ -51,6 +51,7 @@ export default function HomeApresentacao({ onNavigate }: HomeApresentacaoProps) 
       </div>
 
       <main className="flex-1">
+        <img src="./Sun.svg" className="absolute w-145 animate-spin" style={{ animationDuration: '25s' }}/>
         <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background py-14 sm:py-20">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
